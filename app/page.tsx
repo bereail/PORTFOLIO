@@ -1,4 +1,4 @@
-import Image from "next/image";
+
 import Navbar from "@/components/navbar";
 import Introduction from "@/components/introduction";
 import AboutMe from "@/components/about-me";

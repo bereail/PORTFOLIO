@@ -1,6 +1,6 @@
 // re_RDugdJFC_J5F6SLvMBdWN5KVwa7NwwB1B
 import { Resend } from "resend";
-import { EmailTemplate } from "@/components/ui/email-template";
+import EmailTemplate from "@/components/ui/email-template";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
