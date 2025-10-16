@@ -12,12 +12,12 @@ const Footer = () => {
                     <Link href="#about-me">Sobre mi</Link>
                     <Link href="#skills">Skills</Link>
                     <Link href="#services">Servicios</Link>
-                    <Link href="#portfolio">Portfolio </Link>
+                    <Link href="#portfolio">Proyectos </Link>
                     <Link href="#contact">Contacto</Link>
                 </div>
             </div>
             <Separator className="my-4" />
-            <div className="text-center">&copy; 2024 | Landing Page by TarreDev</div>
+            <div className="text-center">&copy; 2025 | Landing Page by Ailonline</div>
         </footer>
     );
 }
