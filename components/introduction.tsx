@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Mail, Paperclip } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button"; // ajustá el path si hace falta
-import Image from "next/image";
 import Container from "./shared/container";
 
 const Introduction = () => {

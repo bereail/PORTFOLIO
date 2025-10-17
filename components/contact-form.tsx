@@ -47,29 +47,35 @@ const ContactForm = () => {
     mode: "onBlur", // valida al salir del campo (opcional)
   });
 
-  const onSubmit = async (values: FormValues) => {
-    setServerError(null);
-    setIsSending(true);
-    try {
-      const res = await fetch("/api/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
+const onSubmit = async (values: FormValues) => {
+  setServerError(null);
+  setIsSending(true);
+  try {
+    const res = await fetch("/api/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values),
+    });
 
-      if (!res.ok) {
-        const { error } = await res.json().catch(() => ({ error: "Error" }));
-        throw new Error(error || `Error ${res.status}`);
-      }
-
-      setSuccess(true);
-      form.reset();
-    } catch (err: any) {
-      setServerError(err?.message ?? "No se pudo enviar el formulario.");
-    } finally {
-      setIsSending(false);
+    if (!res.ok) {
+      // Intentamos leer un json con "error", si no hay, armamos un genérico
+      const data = (await res.json().catch(() => null)) as { error?: string } | null;
+      const msg = data?.error ?? `Error ${res.status}`;
+      throw new Error(msg);
     }
-  };
+
+    setSuccess(true);
+    form.reset();
+  } catch (err: unknown) {
+    const message =
+      err instanceof Error
+        ? err.message
+        : "No se pudo enviar el formulario.";
+    setServerError(message);
+  } finally {
+    setIsSending(false);
+  }
+};
 
   if (success) {
     return (
