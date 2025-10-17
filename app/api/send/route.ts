@@ -1,29 +1,51 @@
-// re_RDugdJFC_J5F6SLvMBdWN5KVwa7NwwB1B
+import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import EmailTemplate from "@/components/ui/email-template";
+import { z } from "zod";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Evita que Next intente prerender / instanciar el módulo en build
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+const schema = z.object({
+  username: z.string().trim().min(2).max(50),
+  email: z.string().trim().email().max(100),
+  message: z.string().trim().min(10).max(2000),
+});
 
 export async function POST(req: Request) {
   try {
-    const dataForm = await req.json();
-    try {
-      const data = await resend.emails.send({
-        from: "Acme <onboarding@resend.dev>",
-        to: ["rafatarre@gmail.com"],
-        subject: "Tarredev landing",
-        react: EmailTemplate({
-          firstName: dataForm.username,
-          message: dataForm.message,
-          email: dataForm.email,
-        }),
-        text: "Tarredev",
-      });
-      return Response.json(data);
-    } catch (error) {
-      return Response.json({ error });
+    const body = await req.json();
+    const { username, email, message } = schema.parse(body);
+
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      // No clave en entorno => error de servidor (pero NO truena el build)
+      return NextResponse.json(
+        { error: "Falta RESEND_API_KEY en el servidor." },
+        { status: 500 }
+      );
     }
-  } catch (error) {
-    return Response.json({ error });
+
+    // Instanciar DENTRO del handler (no en top-level)
+    const resend = new Resend(apiKey);
+
+    const to = process.env.MAIL_TO ?? "tu@correo.com";
+    const from = process.env.MAIL_FROM ?? "Portfolio <onboarding@resend.dev>";
+
+await resend.emails.send({
+  from,
+  to,
+  subject: `Nuevo mensaje de ${username}`,
+  replyTo: email, // ← aquí el fix
+  text: `De: ${username} <${email}>\n\n${message}`,
+});
+
+    return NextResponse.json({ ok: true });
+  } catch (err: unknown) {
+    if (err instanceof z.ZodError) {
+      return NextResponse.json({ error: "Datos inválidos" }, { status: 400 });
+    }
+    console.error(err);
+    return NextResponse.json({ error: "No se pudo enviar el correo" }, { status: 500 });
   }
 }
