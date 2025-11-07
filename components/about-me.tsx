@@ -6,40 +6,71 @@ const AboutMe = () => {
   return (
     <section
       id="about-me"
-      className="flex flex-col items-center justify-center px-6 md:px-12 py-20 max-w-4xl mx-auto text-center"
+      role="region"
+      aria-labelledby="aboutme-title"
+      className="mx-auto max-w-4xl px-6 md:px-12 py-20 text-center"
     >
       {/* Título */}
+      <div className="sr-only" id="aboutme-title">Sobre mí</div>
       <Title title="Sobre mí" subtitle="Conóceme" />
 
       {/* Texto principal */}
-      <p className="my-8 leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
-        Soy <strong>Berenice Solohaga</strong>, desarrolladora <strong>Full-Stack</strong> con experiencia en la
-        creación de aplicaciones web y móviles utilizando tecnologías como{" "}
-        <strong>Django / REST Framework</strong> y <strong>React / Next.js</strong>.
-        <br /><br />
-        Me especializo en construir soluciones escalables y mantenibles, aplicando
-        principios de <strong>arquitectura limpia, SOLID y buenas prácticas</strong>.
-        También tengo experiencia en desarrollo móvil con <strong>React Native</strong>,
-        integración de APIs, manejo de bases de datos SQL y despliegues con{" "}
-        <strong>Nginx</strong> y <strong>Certbot</strong>.
-        <br /><br />
-        Entre mis proyectos más destacados se encuentran <strong>StatuApp</strong>, una app
-        cultural para la ciudad de Rosario que combina datos, mapas y QR, y{" "}
-        <strong>ReadMe</strong>, una aplicación para registrar lecturas y anotaciones
-        integrando la API de OpenLibrary.
-        <br /><br />
-        Busco formar parte de un equipo donde pueda seguir aprendiendo, aportar mi
-        creatividad y experiencia técnica, y participar en el desarrollo de productos
-        que generen un impacto real.
-      </p>
+      <div className="mx-auto mt-8 max-w-prose text-gray-700 dark:text-gray-300">
+        <p className="leading-relaxed text-base md:text-lg">
+          Soy <strong>Berenice Solohaga</strong>, <strong>Full-Stack Developer</strong>. 
+          Construyo aplicaciones web y móviles con <strong>React / Next.js</strong> y 
+          <strong> Django REST Framework</strong>, enfocándome en calidad, rendimiento y 
+          experiencia de usuario.
+        </p>
+
+        <p className="mt-5 leading-relaxed text-base md:text-lg">
+          Aplico <strong>arquitectura limpia</strong>, principios <strong>SOLID</strong> y 
+          buenas prácticas para crear soluciones <strong>escalables</strong> y 
+          <strong> mantenibles</strong>. Tengo experiencia en <strong>React Native</strong>, 
+          integración de APIs, bases de datos SQL y despliegues con <strong>Nginx</strong> 
+          y <strong>Certbot</strong>.
+        </p>
+
+        <p className="mt-5 leading-relaxed text-base md:text-lg">
+          Algunos proyectos destacados: <strong>StatuApp</strong> —app cultural de Rosario 
+          con datos, mapas y QR— y <strong>ReadMe</strong> —registro de lecturas y 
+          anotaciones integrando OpenLibrary—.
+        </p>
+
+        <p className="mt-5 leading-relaxed text-base md:text-lg">
+          Busco sumarme a un equipo donde seguir aprendiendo, aportar creatividad y 
+          desarrollar productos con <strong>impacto real</strong>.
+        </p>
+      </div>
+
+      {/* Highlights (badges rápidos) */}
+      <ul className="mt-8 flex flex-wrap items-center justify-center gap-2 text-sm md:text-base">
+        <li className="rounded-full border px-3 py-1 text-gray-800 dark:text-gray-100 dark:border-gray-700">
+          React / Next.js
+        </li>
+        <li className="rounded-full border px-3 py-1 text-gray-800 dark:text-gray-100 dark:border-gray-700">
+          Django / DRF
+        </li>
+        <li className="rounded-full border px-3 py-1 text-gray-800 dark:text-gray-100 dark:border-gray-700">
+          Arquitectura limpia & SOLID
+        </li>
+        <li className="rounded-full border px-3 py-1 text-gray-800 dark:text-gray-100 dark:border-gray-700">
+          APIs & SQL
+        </li>
+        <li className="rounded-full border px-3 py-1 text-gray-800 dark:text-gray-100 dark:border-gray-700">
+          Deploy con Nginx / Certbot
+        </li>
+      </ul>
 
       {/* Botón centrado */}
-      <Button asChild>
-        <a href="#contact" className="flex items-center justify-center">
-          <Phone size={20} className="mr-2" />
-          Hablamos
-        </a>
-      </Button>
+      <div className="mt-10">
+        <Button asChild className="text-base md:text-lg">
+          <a href="#contact" className="inline-flex items-center" aria-label="Ir a la sección de contacto">
+            <Phone size={20} className="mr-2" />
+            Hablemos
+          </a>
+        </Button>
+      </div>
     </section>
   );
 };

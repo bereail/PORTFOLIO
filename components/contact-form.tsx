@@ -1,14 +1,23 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
+
+const MESSAGE_MAX = 2000;
 
 const schema = z.object({
   username: z
@@ -25,65 +34,96 @@ const schema = z.object({
     .string()
     .trim()
     .min(10, "Contame un poco más (mín. 10 caracteres)")
-    .max(2000, "Máximo 2000 caracteres"),
-  // Honeypot anti-spam (campo oculto). Si lo usás, agregalo al form.
-  // hp: z.string().optional()
+    .max(MESSAGE_MAX, `Máximo ${MESSAGE_MAX} caracteres`),
+  // 🕷️ Honeypot anti-spam: debe venir vacío
+  hp: z.string().optional().refine((v) => !v, "Invalid"),
 });
 
 type FormValues = z.infer<typeof schema>;
 
 const ContactForm = () => {
-  const [success, setSuccess] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  const [isSending, setIsSending] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const successRef = useRef<HTMLDivElement | null>(null);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      username: "",
-      email: "",
-      message: "",
-    },
-    mode: "onBlur", // valida al salir del campo (opcional)
+    defaultValues: { username: "", email: "", message: "", hp: "" },
+    mode: "onBlur",
   });
 
-const onSubmit = async (values: FormValues) => {
-  setServerError(null);
-  setIsSending(true);
-  try {
-    const res = await fetch("/api/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
+  const {
+    control,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { isSubmitting },
+  } = form;
 
-    if (!res.ok) {
-      // Intentamos leer un json con "error", si no hay, armamos un genérico
-      const data = (await res.json().catch(() => null)) as { error?: string } | null;
-      const msg = data?.error ?? `Error ${res.status}`;
-      throw new Error(msg);
+  // Foco en el bloque de éxito
+  useEffect(() => {
+    if (success && successRef.current) {
+      successRef.current.focus();
     }
+  }, [success]);
 
-    setSuccess(true);
-    form.reset();
-  } catch (err: unknown) {
-    const message =
-      err instanceof Error
-        ? err.message
-        : "No se pudo enviar el formulario.";
-    setServerError(message);
-  } finally {
-    setIsSending(false);
-  }
-};
+  const onSubmit = async (values: FormValues) => {
+    setServerError(null);
+
+    // Si el honeypot tiene algo, abortamos (bot/robot)
+    if (values.hp) return;
+
+    const controller = new AbortController();
+
+    try {
+      const res = await fetch("/api/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: values.username,
+          email: values.email,
+          message: values.message,
+        }),
+        signal: controller.signal,
+      });
+
+      if (!res.ok) {
+        const data = (await res.json().catch(() => null)) as
+          | { error?: string }
+          | null;
+        throw new Error(data?.error ?? `Error ${res.status}`);
+      }
+
+      setSuccess(true);
+      reset();
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : "No se pudo enviar el formulario.";
+      setServerError(msg);
+    }
+  };
+
+  // Contador live para el mensaje
+  const messageValue = watch("message") ?? "";
+  const charsLeft = MESSAGE_MAX - messageValue.length;
 
   if (success) {
     return (
-      <div className="rounded-lg border p-4 text-center">
-        <h4 className="text-base font-semibold mb-2">
+      <div
+        ref={successRef}
+        tabIndex={-1}
+        className="rounded-lg border p-4 text-center outline-none"
+        role="status"
+        aria-live="polite"
+      >
+        <h4 className="mb-2 text-base font-semibold">
           ¡Gracias! Tu mensaje se envió con éxito ✌🏽
         </h4>
-        <Button variant="secondary" onClick={() => setSuccess(false)}>
+        <Button
+          variant="secondary"
+          onClick={() => setSuccess(false)}
+          aria-label="Enviar otro mensaje"
+        >
           Enviar otro mensaje
         </Button>
       </div>
@@ -92,20 +132,27 @@ const onSubmit = async (values: FormValues) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-6"
+        noValidate
+        aria-describedby={serverError ? "form-error" : undefined}
+      >
         {/* Nombre */}
         <FormField
-          control={form.control}
+          control={control}
           name="username"
           render={({ field }) => (
             <FormItem>
+              <FormLabel htmlFor="username">Nombre</FormLabel>
               <FormControl>
                 <Input
+                  id="username"
                   placeholder="Tu nombre"
-                  aria-label="Nombre"
                   aria-invalid={!!form.formState.errors.username}
-                  {...field}
+                  autoComplete="name"
                   className="dark:bg-slate-800"
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
@@ -115,18 +162,20 @@ const onSubmit = async (values: FormValues) => {
 
         {/* Email */}
         <FormField
-          control={form.control}
+          control={control}
           name="email"
           render={({ field }) => (
             <FormItem>
+              <FormLabel htmlFor="email">Email</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Tu email"
+                  id="email"
                   type="email"
-                  aria-label="Email"
+                  placeholder="tu@email.com"
                   aria-invalid={!!form.formState.errors.email}
-                  {...field}
+                  autoComplete="email"
                   className="dark:bg-slate-800"
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
@@ -136,32 +185,66 @@ const onSubmit = async (values: FormValues) => {
 
         {/* Mensaje */}
         <FormField
-          control={form.control}
+          control={control}
           name="message"
           render={({ field }) => (
             <FormItem>
+              <FormLabel htmlFor="message">Mensaje</FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder="Escribí tu mensaje..."
-                  aria-label="Mensaje"
-                  aria-invalid={!!form.formState.errors.message}
-                  rows={5}
-                  {...field}
-                  className="dark:bg-slate-800"
-                />
+                <div>
+                  <Textarea
+                    id="message"
+                    placeholder="Escribí tu mensaje..."
+                    rows={5}
+                    aria-invalid={!!form.formState.errors.message}
+                    aria-describedby="message-counter"
+                    className="dark:bg-slate-800"
+                    {...field}
+                  />
+                  <div
+                    id="message-counter"
+                    className="mt-1 text-right text-xs text-muted-foreground"
+                    aria-live="polite"
+                  >
+                    {charsLeft} caracteres restantes
+                  </div>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
+        {/* Honeypot (oculto para humanos; bots suelen completarlo) */}
+        <FormField
+          control={control}
+          name="hp"
+          render={({ field }) => (
+            <input
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="hidden"
+              {...field}
+            />
+          )}
+        />
+
         {/* Error del servidor */}
         {serverError && (
-          <p className="text-sm text-red-600">{serverError}</p>
+          <p id="form-error" className="text-sm text-red-600" role="alert">
+            {serverError}
+          </p>
         )}
 
-        <Button type="submit" disabled={isSending}>
-          {isSending ? "Enviando..." : "Enviar"}
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          aria-busy={isSubmitting}
+          className="min-w-32"
+        >
+          {isSubmitting ? "Enviando..." : "Enviar"}
         </Button>
       </form>
     </Form>
