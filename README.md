@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌐 Portfolio — Berenice Solohaga
 
-## Getting Started
+Este repositorio contiene el código de mi **portfolio personal** como desarrolladora **Fullstack**.  
+Es la web donde centralizo quién soy, qué hago y en qué proyectos estoy trabajando.
 
-First, run the development server:
+🔗 **Demo online:** https://portfoliobereail.netlify.app  
+🔗 **Web personal / marca:** https://ailonline.com.ar  
+
+---
+
+## 👩‍💻 Sobre mí
+
+Soy **Berenice Solohaga**, desarrolladora **Fullstack** (Python/Django REST + React/Next.js).  
+Me enfoco en:
+
+- Aplicaciones web escalables y mantenibles.
+- Buenas prácticas: arquitectura limpia, SOLID, separación por capas.
+- Integración de APIs, bases de datos relacionales y despliegue en la nube.
+
+Este portfolio resume mi perfil técnico y muestra algunos proyectos clave.
+
+---
+
+## ✨ ¿Qué muestra este portfolio?
+
+Secciones principales (dependiendo de la versión actual):
+
+- **Inicio / Hero** – Presentación rápida: quién soy, stack principal y CTA para contactarme.
+- **Sobre mí** – Resumen de experiencia, enfoque y qué tipo de trabajo busco.
+- **Skills** – Tecnologías que uso: Frontend, Backend, Bases de datos, DevOps, etc.
+- **Proyectos destacados** – Cards con descripción corta, stack y enlaces (GitHub + demo).
+- **Contacto** – Links a mis redes y formulario / mail.
+
+Algunos proyectos que destaco desde aquí:
+
+- 🗿 **StatuApp — Rosario en Estatuas**  
+  Catálogo cultural de estatuas y monumentos de Rosario con mapa y fichas.  
+  Frontend: Next.js + TypeScript · Backend: Django REST  
+  Repo: https://github.com/bereail/statuapp
+
+- 📚 **ReadMe — Registro de lecturas y notas**  
+  App fullstack para registrar libros leídos, fechas, puntajes y notas por página.  
+  Frontend: React/TypeScript · Backend: Django REST  
+  Repo: https://github.com/bereail/ReadMe-Fullstack-App-Django-REST-React-
+
+- 🖨 **stockToner**  
+  Sistema para gestionar stock de tóner entre distintos servicios.  
+  Backend: Django + DRF  
+  Repo: https://github.com/bereail/stockToner
+
+---
+
+## 🧱 Stack tecnológico de este portfolio
+
+- **Framework:** Next.js (App Router)  
+- **Lenguaje:** TypeScript  
+- **Estilos:** CSS (y utilidades según la versión: Tailwind CSS / etc.)  
+- **Build & Routing:** create-next-app, rutas tipo SPA con SEO básico.
+
+> Si querés ver exactamente las dependencias, revisá `package.json` en este repo.
+
+---
+
+## 📁 Estructura básica del proyecto
 
 ```bash
+PORTFOLIO/
+├── app/              # Páginas y layout principal (Next.js App Router)
+├── components/       # Componentes reutilizables (UI, layout, secciones)
+├── lib/              # Utilidades, hooks, helpers
+├── public/           # Imágenes, íconos, favicons
+├── data.tsx          # Datos estáticos (links, proyectos, redes, etc.)
+├── next.config.ts    # Configuración de Next.js
+├── tsconfig.json     # Configuración de TypeScript
+└── package.json      # Dependencias y scripts
+🚀 Cómo correrlo en local
+Clonar el repositorio
+
+bash
+Copiar código
+git clone https://github.com/bereail/PORTFOLIO.git
+cd PORTFOLIO
+Instalar dependencias
+
+bash
+Copiar código
+npm install
+# o
+pnpm install
+# o
+yarn
+Levantar entorno de desarrollo
+
+bash
+Copiar código
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Abrí http://localhost:3000 en el navegador para ver el sitio.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+☁️ Deploy
+Este portfolio puede deployarse en cualquier plataforma compatible con Next.js, por ejemplo:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Netlify
 
-## Learn More
+Render, etc.
 
-To learn more about Next.js, take a look at the following resources:
+En producción lo tengo publicado en:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+🔗 https://portfoliobereail.netlify.app
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+📬 Contacto
+Si querés hablar sobre oportunidades laborales, freelance o colaboraciones:
 
-## Deploy on Vercel
+🌐 Web: https://ailonline.com.ar
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+💼 LinkedIn: https://www.linkedin.com/in/berenice-solohaga
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+🐙 GitHub: https://github.com/bereail
