@@ -7,6 +7,8 @@ Es la web donde centralizo quién soy, qué hago y en qué proyectos estoy traba
 🔗 **Web personal / marca:** https://ailonline.com.ar  
 
 ---
+![Vista previa del portfolio](./public/preview-home.png)
+
 
 ## 👩‍💻 Sobre mí
 
