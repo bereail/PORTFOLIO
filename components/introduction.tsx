@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Mail, Paperclip } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button"; // ajustá el path si hace falta
+import { buttonVariants } from "@/components/ui/button";
 import Container from "./shared/container";
-import Image from "next/image"; // ✅ Import correcto
+import Image from "next/image";
 
 const Introduction = () => {
   return (
@@ -17,7 +17,6 @@ const Introduction = () => {
         <div className="text-center md:text-left max-w-2xl">
           <h3 className="mb-2 text-xl text-muted-foreground">Hola, soy</h3>
 
-          {/* Título accesible */}
           <h1
             id="intro-title"
             className="mb-2 text-4xl font-extrabold tracking-tight sm:text-5xl"
@@ -26,10 +25,13 @@ const Introduction = () => {
           </h1>
 
           <h2 className="mb-6 text-2xl leading-snug text-muted-foreground sm:text-3xl">
-            Desarrollo productos digitales con{" "}
-            <span className="font-semibold text-foreground">React</span> y{" "}
-            <span className="font-semibold text-foreground">Django</span>,
-            combinando diseño, datos e inteligencia artificial.
+            Fullstack Developer. Desarrollo productos digitales con{" "}
+            <span className="font-semibold text-foreground">React / Next.js</span>{" "}
+            y{" "}
+            <span className="font-semibold text-foreground">
+              Django REST Framework
+            </span>
+            , combinando diseño, datos e inteligencia artificial.
           </h2>
 
           {/* CTAs */}
@@ -43,7 +45,6 @@ const Introduction = () => {
               Contacta conmigo
             </Link>
 
-            {/* Para archivos estáticos /public usa <a> con download */}
             <a
               href="/cv-berenice.pdf"
               target="_blank"
@@ -57,7 +58,7 @@ const Introduction = () => {
             </a>
           </div>
 
-          {/* Badges rápidas opcionales */}
+          {/* Badges rápidas */}
           <ul className="mt-6 flex flex-wrap items-center gap-2 text-sm">
             <li className="rounded-full border px-3 py-1 dark:border-gray-700">
               React / Next.js
@@ -66,7 +67,7 @@ const Introduction = () => {
               Django / DRF
             </li>
             <li className="rounded-full border px-3 py-1 dark:border-gray-700">
-              Arquitectura limpia & SOLID
+              Arquitectura limpia &amp; SOLID
             </li>
             <li className="rounded-full border px-3 py-1 dark:border-gray-700">
               IA aplicada
@@ -74,7 +75,7 @@ const Introduction = () => {
           </ul>
         </div>
 
-        {/* Imagen de perfil (opcional) */}
+        {/* Imagen de perfil */}
         <div className="shrink-0">
           <Image
             src="/profile.png" // coloca tu imagen en /public/profile.png
